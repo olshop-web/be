@@ -11,7 +11,9 @@ class Product_variant extends Model
     use HasFactory, HasUlids;
     protected $fillable = [
         'name',
-        'image',
+        'product_id',
     ];
-    
+    public function image(){
+        return $this->hasMany(Product_variant_image::class, 'product_variant_id');
+    }
 }

@@ -15,9 +15,14 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->string('name');
             $table->string('image');
+            $table->string('image_original');
             $table->integer('price');
             $table->integer('discon');
             $table->text('description');
+            $table->string('product_category_id');
+            $table->string('status');
+            $table->integer('popular');
+            $table->string('user_id');
             $table->timestamps();
         });
     }

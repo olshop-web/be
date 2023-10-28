@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_variants', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name');
-            $table->string('image');
+            $table->string('product_id');
             $table->timestamps();
         });
     }

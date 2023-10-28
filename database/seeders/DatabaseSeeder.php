@@ -16,30 +16,50 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        $user = User::create([
             'name' => 'Test User',
             'email' => 'test@example.com',
             'telp' => '+62895331299363',
+            'status' => 'active',
+            'image' => '/images/self.jpg',
+            'image_original' => '/original/self.jpg',
             'password' => Hash::make('asdasdasd')
         ]);
-        Product_category::create([
+        $categoryFirst = Product_category::create([
             'name' => 'Makanan Berat',
         ]);
-        Product_category::create([
+        $categorySecond = Product_category::create([
             'name' => 'Makanan Ringan',
         ]);
-        Product_category::create([
+        $categoryThree = Product_category::create([
             'name' => 'Mebel',
         ]);
-        Product_category::create([
+        $categoryFour = Product_category::create([
             'name' => 'Fashion',
         ]);
         Product::create([
             'name' => 'Test User',
             'image' => '/images/self.jpg',
+            'image_original' => '/original/self.jpg',
             'price' => '300000',
             'discon' => '30',
             'description' => 'bla bla',
+            'status' => 'active',
+            'product_category_id' => $categoryThree->id,
+            'user_id' => $user->id,
+            'popular' => 0,
+        ]);
+        Product::create([
+            'name' => 'Test User',
+            'image' => '/images/self.jpg',
+            'image_original' => '/original/self.jpg',
+            'price' => '300000',
+            'discon' => '30',
+            'description' => 'bla bla',
+            'status' => 'active',
+            'product_category_id' => $categoryFirst->id,
+            'user_id' => $user->id,
+            'popular' => 0,
         ]);
     }
 }
