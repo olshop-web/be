@@ -19,36 +19,43 @@ use App\Http\Controllers\User\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-Route::group(['prefix'=>'product'], function(){
-    Route::get("/get", [ProductController::class, 'getProduct']);
-    Route::get("/get/{idProduct}", [ProductController::class, 'detail']);
-    Route::post("/create", [ProductController::class, 'create'])->middleware('auth.middleware');
-    Route::post("/update/{idProduct}", [ProductController::class, 'update'])->middleware('auth.middleware');
-    Route::post("/delete/{idProduct}", [ProductController::class, 'delete'])->middleware('auth.middleware');
-    Route::group(['prefix'=>'{idProduct}/variant'], function(){
-        Route::post("/create", [VariantController::class, 'create']); 
-        Route::post("/delete/{idVariant}", [VariantController::class, 'delete'])->middleware('auth.middleware');
-        Route::post("/update/{idVariant}", [VariantController::class, 'update'])->middleware('auth.middleware');
-        Route::group(['prefix'=>'image'], function(){
-            Route::post("/delete/{idVariantImage}", [VariantImageController::class, 'delete'])->middleware('auth.middleware');
+
+
+Route::get("/user/{idUser}/product", [UserController::class, 'userProduct']);
+Route::get("/get/category", [CategoryController::class, 'getCategory']); 
+Route::get("/get/product", [ProductController::class, 'getProduct']);
+Route::get("/get/{idProduct}", [ProductController::class, 'detail']);
+
+Route::post("/user/login", [UserController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function(){
+    Route::group(['prefix'=>'product'], function(){
+        Route::post("/create", [ProductController::class, 'create']);
+        Route::post("/update/{idProduct}", [ProductController::class, 'update']);
+        Route::post("/delete/{idProduct}", [ProductController::class, 'delete']);
+        Route::group(['prefix'=>'{idProduct}/variant'], function(){
+            Route::post("/create", [VariantController::class, 'create']); 
+            Route::post("/delete/{idVariant}", [VariantController::class, 'delete']);
+            Route::post("/update/{idVariant}", [VariantController::class, 'update']);
+            Route::group(['prefix'=>'image'], function(){
+                Route::post("/delete/{idVariantImage}", [VariantImageController::class, 'delete']);
+            });
+        });
+        Route::group(['prefix'=>'category'], function(){
+            Route::get("/create", [CategoryController::class, 'create']);
+            Route::post("/update/{idCategory}", [CategoryController::class, 'updateCategory']);
+            Route::post("/delete/{idCategory}", [CategoryController::class, 'delete']);
         });
     });
-    Route::group(['prefix'=>'category'], function(){
-        Route::get("/get", [CategoryController::class, 'getCategory']); 
-        Route::post("/create", [CategoryController::class, 'create'])->middleware('auth.middleware');
-        Route::post("/update/{idCategory}", [CategoryController::class, 'updateCategory'])->middleware('auth.middleware'); 
-        Route::post("/delete/{idCategory}", [CategoryController::class, 'delete'])->middleware('auth.middleware');
+    Route::group(['prefix'=>'user'], function(){
+        Route::get('/check', function (Request $request) {
+            return $request->user();
+        });
+        Route::post("/register", [UserController::class, 'create']);
+        Route::post("/update/{idUser}", [UserController::class, 'update']);
+        Route::post("/logout", [UserController::class, 'logout']);
+        Route::get("/verified")->middleware(['verified', 'auth.middleware']);
     });
 });
-Route::group(['prefix'=>'user'], function(){
-    Route::get("/product/{id}", [UserController::class, 'userProduct']);
-    Route::post("/login", [UserController::class, 'login'])->middleware('web');
-    Route::post("/create", [UserController::class, 'create'])->middleware('auth.middleware');
-    Route::post("/update/{idUser}", [UserController::class, 'update'])->middleware('auth.middleware');
-    Route::post("/logout", [UserController::class, 'update'])->middleware('auth.middleware');
-    Route::get("/verified")->middleware(['verified', 'auth.middleware']);
-});
 
+// Route::resouce(['get', 'post'], '/haha', [UserController::class, "check"]);

@@ -7,37 +7,33 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function userProduct($id){
-        $user = User::with([
-            'product'=>function($product){
-                $product->orderBy('id', 'desc');
-                $product->with('category');
-                $product->with('variant');
-            }
-        ])->get();
-        $datas = collect([...$user]);
-        return response()->json($user);
+    public $service;
+    public function __construct(){
+        return $this->service = new UserService();
+    }
+    public function userProduct($idUser){
+        // return "asdasd";
+        $datas = $this->service->productUser($idUser);
+        return response()->json($datas);
     }
     public function login(Request $request){
-        // dd(Auth::user());
-       $credentials = $request->validate([
-        'email' => ['required', 'email'],
-        'password' => ['required'],
-    ]);
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-       if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
-
-        return Auth::user();
-    }else{
-        return "login gagal";
-
-    }
-        // return $request->login();
+        if (Auth::attempt($credentials)) {
+            $auth = Auth::user();
+            $token = $auth->createToken('auth_token')->plainTextToken;
+            return response()->json($token);
+        }else{
+            return "login gagal";
+        }
     }
     public function create(UserRequest $request){
         $request->create();
@@ -50,8 +46,8 @@ class UserController extends Controller
         return "Akun berhasil di buat";
     }
     public function logout(Request $request){
-        // Auth::logout();
-        // $request->session()->invalidate();
-        // $request->session()->regenerateToken();
+        $user = $request->user()->tokens()->where('id', $request->id)->delete();
+        return $user;
     }
+
 }

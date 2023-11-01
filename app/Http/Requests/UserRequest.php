@@ -41,7 +41,7 @@ class UserRequest extends FormRequest
             return "Login gagal";
         }
     }
-    public function gg(){
+    public function create(){
         Validator::make($this->all(),[
             'name'=>'required',
             'email'=>'required',
@@ -56,6 +56,7 @@ class UserRequest extends FormRequest
             'telp'=>$this->telp,
             'password'=>Hash::make($this->password),
         ]);
+        $token = $user->createToken('auth_token')->plainTextToken;
     }
     public function update($id){
         Validator::make($this->all(),[
@@ -74,4 +75,5 @@ class UserRequest extends FormRequest
             'password'=>$this->password != null ? Hash::make($this->password) : $user->password,
         ]);
     }
+
 }

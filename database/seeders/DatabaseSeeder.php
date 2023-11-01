@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             'image_original' => '/original/self.jpg',
             'password' => Hash::make('asdasdasd')
         ]);
+        $user->createToken('auth_token')->plainTextToken;
         $categoryFirst = Product_category::create([
             'name' => 'Makanan Berat',
         ]);
