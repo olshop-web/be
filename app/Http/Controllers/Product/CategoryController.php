@@ -7,37 +7,36 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product_category;
 use App\Models\Product;
+use App\Http\Requests\CategoryRequest;
+use App\Services\Product\CategoryService;
+use App\Http\Resources\Product\CategoryResource;
+use App\Http\Resources\AlertResource;
 // use App\Http\Middleware\Authenticate;
 
 class CategoryController extends Controller
 {
-    public function create(Request $request){
-        $request->validate([
-            'category'=>'required'
-        ]);
-        $category = Product_category::create([
-            'name'=>$request->category
-        ]);
-        // return Auth::user();
-        return "Categori berhasil ditambahkan";
+    public $service;
+    public function __construct(){
+        $this->service = new CategoryService();
+    }
+    public function create(CategoryRequest $request){
+        $result = $this->service->createCategory($request);
+
+        return response()->json($result);
     }
     public function getCategory(){
-        $category = Product_category::get();
+        $result = $this->service->getCategory();
 
-        return $category;
+        return response()->json($result);
     }
-    public function edit(Request $request, $idCategory){
-        $category = Product_category::find($idCategory)->update([
-            'name'=>$request->category
-        ]);
-
-        return $category;
+    public function updateCategory(Request $request, $idCategory){
+        $result = $this->service->edit($request, $idCategory);
+        
+        return response()->json($result);
     }
     public function delete($idCategory){
-        Product::where('product_category_id', $idCategory)->update([
-            'status'=>'deactive'
-        ]);
-        Product_category::find($idCategory)->delete();
-        return "Categori berhasil dihapus";
+        $result = $this->service->delete($idCategory);
+
+        return response()->json($result);
     }
 }

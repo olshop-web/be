@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post("/create", [ProductController::class, 'create']);
         Route::post("/update/{idProduct}", [ProductController::class, 'update']);
         Route::post("/delete/{idProduct}", [ProductController::class, 'delete']);
+        Route::get("/{idProduct}", [ProductController::class, 'detail']);
         Route::group(['prefix'=>'{idProduct}/variant'], function(){
             Route::post("/create", [VariantController::class, 'create']); 
             Route::post("/delete/{idVariant}", [VariantController::class, 'delete']);
@@ -42,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function(){
             });
         });
         Route::group(['prefix'=>'category'], function(){
-            Route::get("/create", [CategoryController::class, 'create']);
+            Route::post("/create", [CategoryController::class, 'create']);
             Route::post("/update/{idCategory}", [CategoryController::class, 'updateCategory']);
             Route::post("/delete/{idCategory}", [CategoryController::class, 'delete']);
         });
@@ -54,7 +55,7 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post("/register", [UserController::class, 'create']);
         Route::post("/update/{idUser}", [UserController::class, 'update']);
         Route::post("/logout", [UserController::class, 'logout']);
-        Route::get("/verified")->middleware(['verified', 'auth.middleware']);
+        Route::get("/verified")->middleware(['verified']);
     });
 });
 

@@ -7,39 +7,32 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Product_variant_image;
 use App\Models\Product_variant;
+use App\Services\Product\VariantService;
 use App\Http\Requests\productVariantRequest;
 use App\Traits\ImageTrait;
 
 class VariantController extends Controller
 {
     use ImageTrait;
-
+    public $service;
+    public function __construct(){
+        $this->service = new VariantService();
+    }
     public function create(productVariantRequest $request, $idProduct){
-        dd($request->all());
-        $variant = $request->create($idProduct);
-        foreach($request->image as $image){
-            $request->saveImage($image, $variant);
-        }
+        // return $request->all();
+        $result = $this->service->createVariant($request, $idProduct);
 
-        return "Varian berhasil disimpan";
+        return response()->json($result);
     }
-    public function delete($id){
-        $variantImage = Product_variant_image::where('product_variant_id', $id)->get();
-        foreach($variantImage as $image){
-            $this->delete($image);
-        }
-        Product_variant_image::where('product_variant_id', $id)->delete();
-        Product_variant::find($id)->delete();
-        return "Varian berhasil dihapus";
+    public function delete($idProduct, $idVariant){
+        $result = $this->service->deleteVariant($idVariant);
+        
+        return response()->json($result);
     }
-    public function update(Request $request, $idVariant){
-        $request->validate([
-            'name'=>'required'
-        ]);
-        $variant = Product_variant::find($idVariant)->update([
-            'name'=>$request->name
-        ]);
+    public function update(productVariantRequest $request, $idProduct, $idVariant){
+        $result = $this->service->updateVariant($request, $idVariant);
 
-        return "Varian berhasil dihapus";
+        return response()->json($result);
+
     }
 }

@@ -3,11 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Traits\ImageTrait;
 
-class productVariantRequest extends FormRequest
+class CategoryRequest extends FormRequest
 {
-    use ImageTrait;
     /**
      * Determine if the user is authorized to make this request.
      */

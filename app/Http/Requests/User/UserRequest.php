@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Traits\ImageTrait;
 
-class productVariantRequest extends FormRequest
+class UserRequest extends FormRequest
 {
-    use ImageTrait;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -24,7 +22,12 @@ class productVariantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'required'
+            'name'=>'required',
+            'email'=>'required|email',
+            'status'=>'required',
+            'telp'=>'required',
+            'password'=>'required',
+            'image'=>'required',
         ];
     }
 }
